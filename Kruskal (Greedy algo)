@@ -1,0 +1,110 @@
+
+
+//time complexity  O(ELogE + ELogV)
+
+
+
+//kruskal algorithm
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+
+//find or parent function
+int find(int x, vector<int>&par){
+    
+    if(par[x]==x)return x;
+    
+    else return par[x]=find(par[x],par);
+}
+
+//union function
+
+void uno(int x,int y,vector<int>&rank,vector<int>&par){
+    
+   int a=find(x,par);
+   int b=find(y,par);
+   
+  if(a==b)return;
+  
+  else if(rank[a]>rank[b]){
+      par[b]=a;
+  }
+  
+  else if(rank[b]>rank[a]){
+      par[a]=b;
+  }
+  
+  else{
+      par[a]=b;
+      rank[b]=rank[b]+1;
+  }
+    
+}
+
+//solve
+
+bool solve(int x,int y,vector<int>&rank,vector<int>&par){
+    if(find(x,par)==find(y,par))return true;
+    else{
+        uno(x,y,rank,par);
+    }
+    
+    return false;
+}
+
+
+
+
+int main(){
+    
+    int v,e;
+    cin>>v>>e;
+    
+vector<pair<int,pair<int,int>>>adj(v);
+
+for(int i=0;i<e;i++){
+    int a,b,wt;
+    cin>>a>>b>>wt;
+  adj.push_back({wt,{a,b}});
+}
+
+
+//for disjoint set union
+
+vector<int>rank(v,1);
+vector<int>par(v,0);
+
+for(int i=0;i<v;i++){
+    rank[i]=1;
+    par[i]=i;
+}
+
+
+//sort the list which containg wt , a, bool
+
+sort(adj.begin(),adj.end());
+int sum=0;
+
+for(auto x:adj){
+    
+    int wt=x.first;
+    int a=x.second.first;
+    int b=x.second.second;
+    
+    //parent is not same so we can say that if joint this edge it will not make any cycle
+  if(!solve(a,b,rank,par)){
+      sum+=wt;
+  } 
+    
+}
+   
+   
+   
+   cout<<sum<<endl;
+   
+    
+    
+    return 0;
+}
