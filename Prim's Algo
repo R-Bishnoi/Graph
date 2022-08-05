@@ -1,0 +1,74 @@
+//time complexity (E logv)
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    
+    int v,e;
+    cin>>v>>e;
+    
+    vector<vector<pair<int,int>>>adj(v);
+    
+vector<int>par(v,-1);
+vector<int>key(v,INT_MAX);
+vector<bool>mst(v,false);
+     key[0]=0;
+     par[0]=-1;
+     mst[0]=true;
+     
+for(int i=0;i<e;i++){
+  int a,b,wt;
+  cin>>a>>b>>wt;
+  
+  adj[a].push_back({b,wt});
+  adj[b].push_back({a,wt});
+  
+}
+
+//taking max heap 
+priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+
+//dist , vertex
+pq.push({0,0});
+
+while(!pq.empty()){
+    
+  int x=pq.top().second;
+  pq.pop();
+  
+  mst[x]=true;
+  
+ for(auto y:adj[x]){
+     
+     int node=y.first;
+     int weight=y.second;
+     
+     
+    if(mst[node]==false && key[node]>weight){
+       par[node]=x;
+       key[node]=weight;
+       pq.push({weight,node});
+    }
+    
+ }
+    
+    
+}
+
+int sum=0;
+
+for(int i=0;i<v;i++){
+    sum+=key[i];
+}
+
+cout<<sum<<endl;
+
+for(int j=1;j<v;j++){
+    cout<<par[j]<<"  --> "<<j<<endl;
+}
+
+
+    return 0;
+
+}
